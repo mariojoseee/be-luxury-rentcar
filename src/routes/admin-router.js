@@ -1,8 +1,8 @@
 const express = require("express");
-const Controller = require("../controllers/nama-controller");
+const brandController = require("../controllers/brand-controller");
 
 const router = express.Router();
 
-router.use("/", Controller.namaFungsi);
+router.use("/", brandController.brand);
 
 module.exports = router;
