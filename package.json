@@ -13,8 +13,14 @@
     "nodemon": "latest"
   },
   "dependencies": {
-    "express": "latest",
+    "bcryptjs": "^2.4.3",
     "cors": "latest",
-    "dotenv": "latest"
+    "dotenv": "latest",
+    "express": "latest",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.3.3",
+    "sequelize": "^6.6.5",
+    "validator": "^13.9.0"
   }
 }
