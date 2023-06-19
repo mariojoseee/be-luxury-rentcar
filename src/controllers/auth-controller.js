@@ -11,13 +11,19 @@ exports.registerUser = async (req, res) => {
 		return res.status(400).json({ errors: errors.array() });
 	}
 
-	const { name, email, password } = req.body;
+	const { username, name, email, password } = req.body;
 
 	try {
-		// Check if user with the same email already exists
-		const existingUser = await User.findOne({ where: { email } });
-		if (existingUser) {
+		// Check if email already exists
+		const existingEmail = await User.findOne({ where: { email } });
+		if (existingEmail) {
 			return res.status(400).json({ message: "Email is already registered" });
+		}
+
+		// Check if username already exists
+		const existingUsername = await User.findOne({ where: { username } });
+		if (existingUsername) {
+			return res.status(400).json({ message: "Username is already registered" });
 		}
 
 		// Hash the password
@@ -25,6 +31,7 @@ exports.registerUser = async (req, res) => {
 
 		// Insert data user
 		const user = await User.create({
+			username,
 			name,
 			email,
 			password: hashedPassword,
@@ -62,7 +69,7 @@ exports.login = async (req, res) => {
 		}
 
 		// Generate JWT token
-		const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "3h" });
+		const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "5h" });
 
 		// Check user role
 		if (user.role === "admin") {
