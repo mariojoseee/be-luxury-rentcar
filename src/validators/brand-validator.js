@@ -1,8 +1,8 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const db = require("../models");
 const Brand = db.Brand;
 
-// Brand validation rules
+// Create validator rules
 exports.createBrandValidationRules = [
 	body("name")
 		.notEmpty()
@@ -23,7 +23,9 @@ exports.createBrandValidationRules = [
 		}),
 ];
 
+// Update validator rules
 exports.updateBrandValidationRules = [
+	param("id").notEmpty().withMessage("Brand id is required"),
 	body("name")
 		.notEmpty()
 		.withMessage("Brand name is required")
@@ -45,3 +47,6 @@ exports.updateBrandValidationRules = [
 			return true;
 		}),
 ];
+
+// Check value brand id
+exports.getBrandIdRules = [param("id").notEmpty().withMessage("Brand id is required")];

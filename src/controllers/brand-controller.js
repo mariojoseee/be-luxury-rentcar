@@ -29,7 +29,7 @@ exports.getAllBrands = async (req, res) => {
 	try {
 		const brands = await Brand.findAll();
 
-		return res.status(200).json({ message: "Get All Brand Success", brands });
+		return res.status(200).json({ message: "Get All Brands Success", brands });
 	} catch (error) {
 		res.status(500).send({
 			message: "An Error Occured",
@@ -91,7 +91,7 @@ exports.updateBrand = async (req, res) => {
 	}
 };
 
-// Delete brand
+// DELETE BRAND
 exports.deleteBrand = async (req, res) => {
 	try {
 		const { id } = req.params;

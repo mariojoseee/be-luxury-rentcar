@@ -117,3 +117,21 @@ exports.verifyToken = async (req, res, next) => {
 		});
 	}
 };
+
+// 3. Verifikasi Role Admin
+exports.verifyAdmin = async (req, res, next) => {
+	try {
+		if (req.User.role !== "admin") {
+			return res.status(403).send({
+				message: "You not authorized, this endpoint for admin",
+			});
+		}
+
+		next();
+	} catch (error) {
+		res.status(500).send({
+			message: "An Error Occured",
+			data: error.message,
+		});
+	}
+};
