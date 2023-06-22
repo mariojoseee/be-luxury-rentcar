@@ -4,6 +4,7 @@ const { createBrandValidationRules, updateBrandValidationRules, getBrandIdRules 
 const { createCar, getAllCars, getCarById, updateCar, deleteCar } = require("../controllers/car-controller");
 const { createCarValidationRules, updateCarValidationRules, getCarIdRules } = require("../validators/car-validator");
 const { verifyToken, verifyAdmin } = require("../controllers/auth-controller");
+const { getImagesCarById, createImagesCar, deleteImagesCar, updateImagesCar } = require("../controllers/imagecar-controller");
 
 const router = express.Router();
 
@@ -20,5 +21,11 @@ router.post("/cars", verifyToken, verifyAdmin, createCarValidationRules, createC
 router.get("/cars/:id", verifyToken, verifyAdmin, getCarIdRules, getCarById);
 router.put("/cars/:id", verifyToken, verifyAdmin, updateCarValidationRules, updateCar);
 router.delete("/cars/:id", verifyToken, verifyAdmin, getCarIdRules, deleteCar);
+
+// CRUD Image Car
+router.get("/image-car/:id", verifyToken, verifyAdmin, getImagesCarById);
+router.post("/image-car/:id", verifyToken, verifyAdmin, createImagesCar);
+router.delete("/image-car/:id", verifyToken, verifyAdmin, deleteImagesCar);
+router.patch("/image-car/:id", verifyToken, verifyAdmin, updateImagesCar);
 
 module.exports = router;
