@@ -10,3 +10,6 @@ exports.registerValidationRules = [
 
 // Login validation rules
 exports.loginValidationRules = [body("email").notEmpty().withMessage("Email is required").isEmail().withMessage("Invalid email format"), body("password").notEmpty().withMessage("Password is required")];
+
+// Update profile user
+exports.updateUserValidationRules = [body("name").notEmpty().withMessage("Name is required"), body("username").notEmpty().withMessage("Username is required")];

@@ -1,4 +1,4 @@
-const { Brand, Car } = require("../models");
+const { Brand, Car, sequelize } = require("../models");
 const { validationResult } = require("express-validator");
 
 // CREATE CAR
@@ -31,7 +31,16 @@ exports.createCar = async (req, res) => {
 // READ ALL CAR
 exports.getAllCars = async (req, res) => {
 	try {
-		const cars = await Car.findAll();
+		const cars = await Car.findAll({
+			attributes: ["id", "name", [sequelize.literal("`Brand`.`name`"), "name_brand"], "price", "brand_id", "createdAt", "updatedAt"],
+			raw: true,
+			include: [
+				{
+					model: Brand,
+					attributes: [],
+				},
+			],
+		});
 
 		return res.status(200).json({ message: "Get All Cars Success", cars });
 	} catch (error) {

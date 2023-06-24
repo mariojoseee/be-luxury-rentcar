@@ -7,8 +7,8 @@ const { time } = require("console");
 exports.getImagesCarById = async (req, res) => {
 	try {
 		// Menangkap Car Id untuk dilakukan query
-		const { id } = req.params;
-		const imagesCar = await Image_Car.findAll({ where: { car_id: id } });
+		const { car_id } = req.params;
+		const imagesCar = await Image_Car.findAll({ where: { car_id: car_id } });
 
 		if (imagesCar) {
 			return res.status(200).json({ message: "Get Images Car by ID Success", imagesCar });
@@ -39,23 +39,23 @@ exports.createImagesCar = async (req, res) => {
 
 	file.mv(`./public/images/${fileName}`, async (err) => {
 		if (err) return res.status(500).json({ message: err.message });
-		try {
-			// Make sure car_id
-			const { id } = req.params;
-			const carId = await Car.findByPk(id);
-			if (!carId) {
-				return res.status(404).json({ error: "Car id not found" });
-			}
-
-			const input = await Image_Car.create({ image: fileName, url: url, car_id: id });
-			res.status(201).json({ message: "Image Car Created Successfuly", input });
-		} catch (error) {
-			res.status(500).send({
-				message: "An Error Occured",
-				data: error.message,
-			});
-		}
 	});
+	try {
+		// Make sure car_id
+		const { id_car } = req.params;
+		const carId = await Car.findByPk(id_car);
+		if (!carId) {
+			return res.status(404).json({ error: "Car id not found" });
+		}
+
+		const input = await Image_Car.create({ image: fileName, url: url, car_id: id_car });
+		res.status(201).json({ message: "Image Car Created Successfuly", input });
+	} catch (error) {
+		res.status(500).send({
+			message: "An Error Occured",
+			data: error.message,
+		});
+	}
 };
 
 // DELETE IMAGE CAR BY ID
