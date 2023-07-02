@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable("cars", {
+		await queryInterface.createTable("payments", {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
@@ -12,25 +12,12 @@ module.exports = {
 			name: {
 				type: Sequelize.STRING,
 				allowNull: false,
+				unique: true,
 			},
-			price: {
+			admin_fee: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
-			},
-			status: {
-				allowNull: false,
-				type: Sequelize.TINYINT,
-				defaultValue: 1, // Default value: 1 (Ready)
-			},
-			brand_id: {
-				type: Sequelize.INTEGER,
-				allowNull: false,
-				references: {
-					model: "brands",
-					key: "id",
-				},
-				onUpdate: "CASCADE",
-				onDelete: "CASCADE",
+				defaultValue: 0,
 			},
 			createdAt: {
 				allowNull: false,
@@ -43,6 +30,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("cars");
+		await queryInterface.dropTable("payments");
 	},
 };

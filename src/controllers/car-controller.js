@@ -9,7 +9,7 @@ exports.createCar = async (req, res) => {
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { name, price, brand_id } = req.body;
+		const { name, price, brand_id, status } = req.body;
 
 		// Make sure brand_id
 		const brand = await Brand.findByPk(brand_id);
@@ -17,7 +17,7 @@ exports.createCar = async (req, res) => {
 			return res.status(404).json({ error: "Brand not found" });
 		}
 
-		const input = await Car.create({ name, price, brand_id });
+		const input = await Car.create({ name, price, brand_id, status });
 
 		return res.status(201).json({ message: "Create Car Success", input });
 	} catch (error) {
@@ -32,7 +32,7 @@ exports.createCar = async (req, res) => {
 exports.getAllCars = async (req, res) => {
 	try {
 		const cars = await Car.findAll({
-			attributes: ["id", "name", [sequelize.literal("`Brand`.`name`"), "name_brand"], "price", "brand_id", "createdAt", "updatedAt"],
+			attributes: ["id", "name", [sequelize.literal("`Brand`.`name`"), "name_brand"], "price", "status", "brand_id", "createdAt", "updatedAt"],
 			raw: true,
 			include: [
 				{

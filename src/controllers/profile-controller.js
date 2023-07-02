@@ -43,21 +43,6 @@ exports.updateProfileUser = async (req, res) => {
 			return res.status(404).json({ error: "User not found" });
 		}
 
-		// Check if the provided username is different from the current username
-		if (username !== user.username) {
-			// Check if username already exists
-			const existingUsername = await User.findOne({ where: { username } });
-			if (existingUsername) {
-				return res.status(400).json({ message: "Username is already in use" });
-			}
-		}
-
-		// Check if phone_number already exists
-		const existingPhoneNumber = await User.findOne({ where: { phone_number } });
-		if (existingPhoneNumber) {
-			return res.status(400).json({ message: "Phone number is already use" });
-		}
-
 		// Validasi image profile
 		const timestamp = Date.now();
 		const file = req.files ? req.files.file : null;
@@ -74,10 +59,10 @@ exports.updateProfileUser = async (req, res) => {
 				url = user.url;
 			} else {
 				// Update profile image
-				const filepath = `./public/images/${user.image}`;
+				const filepath = `./public/images/profiles/${user.image}`;
 				fs.unlinkSync(filepath);
 				fileName = file.md5 + timestamp + ext;
-				url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+				url = `${req.protocol}://${req.get("host")}/images/profiles/${fileName}`;
 			}
 			// Pengecekan jika tidak terdapat data image di DB (pertama kali isi foto)
 		} else {
@@ -86,7 +71,7 @@ exports.updateProfileUser = async (req, res) => {
 				return res.status(400).json({ message: "No File Uploaded" });
 			} else {
 				fileName = file.md5 + timestamp + ext;
-				url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+				url = `${req.protocol}://${req.get("host")}/images/profiles/${fileName}`;
 			}
 		}
 
@@ -105,7 +90,7 @@ exports.updateProfileUser = async (req, res) => {
 
 		// Pengecekan apakah user mengupload image
 		if (file) {
-			file.mv(`./public/images/${fileName}`, async (err) => {
+			file.mv(`./public/images/profiles/${fileName}`, async (err) => {
 				if (err) return res.status(500).json({ message: err.message });
 
 				// Update user profile

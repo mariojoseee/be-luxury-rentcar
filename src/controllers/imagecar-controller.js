@@ -7,8 +7,8 @@ const { time } = require("console");
 exports.getImagesCarById = async (req, res) => {
 	try {
 		// Menangkap Car Id untuk dilakukan query
-		const { car_id } = req.params;
-		const imagesCar = await Image_Car.findAll({ where: { car_id: car_id } });
+		const { id_car } = req.params;
+		const imagesCar = await Image_Car.findAll({ where: { car_id: id_car } });
 
 		if (imagesCar) {
 			return res.status(200).json({ message: "Get Images Car by ID Success", imagesCar });

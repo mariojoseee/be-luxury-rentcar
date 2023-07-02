@@ -13,9 +13,18 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Image_Car.init(
 		{
-			image: DataTypes.STRING,
-			url: DataTypes.STRING,
-			car_id: DataTypes.INTEGER,
+			image: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			url: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			car_id: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+			},
 		},
 		{
 			sequelize,

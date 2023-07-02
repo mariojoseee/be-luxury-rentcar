@@ -19,6 +19,7 @@ module.exports = {
 			},
 			car_id: {
 				type: Sequelize.INTEGER,
+				allowNull: false,
 			},
 			createdAt: {
 				allowNull: false,

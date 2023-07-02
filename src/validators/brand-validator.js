@@ -47,6 +47,3 @@ exports.updateBrandValidationRules = [
 			return true;
 		}),
 ];
-
-// Check value brand id
-exports.getBrandIdRules = [param("id").notEmpty().withMessage("Brand id is required")];
