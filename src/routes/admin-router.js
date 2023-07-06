@@ -1,4 +1,5 @@
 const express = require("express");
+const { verifyToken, verifyAdmin } = require("../controllers/auth-controller");
 const { updateUserValidationRules } = require("../validators/auth-validator");
 const { createBrand, getAllBrands, getBrandById, updateBrand, deleteBrand } = require("../controllers/brand-controller");
 const { createBrandValidationRules, updateBrandValidationRules } = require("../validators/brand-validator");
@@ -6,8 +7,9 @@ const { createPayment, getAllPayments, getPaymentById, updatePayment, deletePaym
 const { createPaymentValidationRules, updatePaymentValidationRules } = require("../validators/payment-validator");
 const { createCar, getAllCars, getCarById, updateCar, deleteCar } = require("../controllers/car-controller");
 const { createCarValidationRules, updateCarValidationRules } = require("../validators/car-validator");
-const { verifyToken, verifyAdmin } = require("../controllers/auth-controller");
 const { getImagesCarById, createImagesCar, deleteImagesCar, updateImagesCar } = require("../controllers/imagecar-controller");
+const { getSpesificationCarById, createSpesification, deleteSpesification, updateSpesification } = require("../controllers/spesification-controller");
+const { spesificationValidationRules } = require("../validators/spesification-validator");
 const { updateProfileUser } = require("../controllers/profile-controller");
 
 const router = express.Router();
@@ -38,6 +40,12 @@ router.get("/image-car/:id_car", verifyToken, verifyAdmin, getImagesCarById);
 router.post("/image-car/:id_car", verifyToken, verifyAdmin, createImagesCar);
 router.delete("/image-car/:id", verifyToken, verifyAdmin, deleteImagesCar);
 router.patch("/image-car/:id", verifyToken, verifyAdmin, updateImagesCar);
+
+// CRUD Spesification Car
+router.get("/spesification/:id_car", verifyToken, verifyAdmin, getSpesificationCarById);
+router.post("/spesification/:id_car", verifyToken, verifyAdmin, spesificationValidationRules, createSpesification);
+router.delete("/spesification/:id", verifyToken, verifyAdmin, deleteSpesification);
+router.patch("/spesification/:id", verifyToken, verifyAdmin, spesificationValidationRules, updateSpesification);
 
 // Edit Profile (Testing nya di router admin)
 router.put("/profile", verifyToken, updateUserValidationRules, updateProfileUser);
