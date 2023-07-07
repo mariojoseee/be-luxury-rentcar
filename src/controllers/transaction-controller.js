@@ -1,12 +1,28 @@
 const { Transaction, Car, User } = require("../models");
 const { validationResult } = require("express-validator");
 const moment = require("moment");
-const cloudinary = require("../config/cloudinary");
-const upload = require("../middleware/multer");
+const path = require("path");
+const fs = require("fs");
 
 // CREATE CAR TRANSACTION USER
 exports.createTransaction = async (req, res) => {
 	try {
+		if (req.files === null) return res.status(400).json({ message: "No File Uploaded" });
+		const timestamp = Date.now();
+		const file = req.files.file;
+		const fileSize = file.data.length;
+		const ext = path.extname(file.name);
+		const fileName = file.md5 + timestamp + ext;
+		const url = `${req.protocol}://${req.get("host")}/images/transactions/${fileName}`;
+		const allowedType = [".png", ".jpg", ".jpeg"];
+
+		if (!allowedType.includes(ext.toLowerCase())) return res.status(422).json({ message: "Invalid image format. Make sure the uploaded format is .jpg, .jpeg, and .png" });
+		if (fileSize > 2000000) return res.status(422).json({ message: "Image must be less than 2 MB" });
+
+		file.mv(`./public/images/transactions/${fileName}`, async (err) => {
+			if (err) return res.status(500).json({ message: err.message });
+		});
+
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
@@ -28,11 +44,6 @@ exports.createTransaction = async (req, res) => {
 			return res.status(404).json({ error: "The user ID not available" });
 		}
 
-		// Upload identity_proof to Cloudinary
-		const result = await cloudinary.uploader.upload(req.file.path, { folder: "identity_proofs" });
-		// Get URL image from Cloudinary
-		const identity_proofUrl = result.secure_url;
-
 		// Car rental days calculation
 		const startDate = moment(start_date, "YYYY-MM-DD");
 		const endDate = moment(end_date, "YYYY-MM-DD");
@@ -48,10 +59,11 @@ exports.createTransaction = async (req, res) => {
 			car_id: id_car,
 			user_id: id_user,
 			total_price,
-			identity_proof: identity_proofUrl,
+			identity_image: fileName,
+			url: url,
 		});
 
-		const transaction = { start_date, end_date, car_name: car.name, customer: user.name, total_price, duration, identity_proofUrl };
+		const transaction = { start_date, end_date, car_name: car.name, customer: user.name, total_price, duration, identity_image: fileName, url: url };
 
 		return res.status(201).json({ message: "Create Transaction Success", transaction });
 	} catch (error) {

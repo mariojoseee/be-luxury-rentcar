@@ -1,4 +1,4 @@
-const { Brand, Car, sequelize } = require("../models");
+const { Brand, Car, Image_Car, Spesification, sequelize } = require("../models");
 const { validationResult } = require("express-validator");
 
 // CREATE CAR
@@ -119,6 +119,63 @@ exports.deleteCar = async (req, res) => {
 		} else {
 			return res.status(404).json({ message: "Car not found" });
 		}
+	} catch (error) {
+		res.status(500).send({
+			message: "An Error Occured",
+			data: error.message,
+		});
+	}
+};
+
+// =============== * USER * ===============
+
+// READ ALL CAR IMAGES AND SPEC ON CAR ID
+exports.getDetailsCar = async (req, res) => {
+	try {
+		const { id_car } = req.params;
+
+		const car = await Car.findOne({
+			where: { id: id_car },
+			include: [
+				{
+					model: Brand,
+					attributes: ["name"],
+				},
+				{
+					model: Image_Car,
+					attributes: ["id", "image", "url"],
+				},
+				{
+					model: Spesification,
+					attributes: ["id", "text"],
+				},
+			],
+		});
+
+		if (!car) {
+			return res.status(404).json({ message: "Car not found" });
+		}
+
+		// Format data mobil dan relasi
+		const formattedCar = {
+			id: car.id,
+			name: car.name,
+			status: car.status,
+			brand: car.Brand.name,
+			price: `Rp. ${car.price.toLocaleString("id-ID")}`,
+
+			spesification: car.Spesifications.map((spesification) => ({
+				id: spesification.id,
+				text: spesification.text,
+			})),
+
+			image_car: car.Image_Cars.map((image) => ({
+				id: image.id,
+				url: image.url,
+			})),
+		};
+
+		res.status(200).json({ message: "Get Car Success", formattedCar });
 	} catch (error) {
 		res.status(500).send({
 			message: "An Error Occured",

@@ -25,7 +25,11 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
-			identity_proof: {
+			identity_image: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			url: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
