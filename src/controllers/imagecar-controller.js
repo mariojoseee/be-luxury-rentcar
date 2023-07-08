@@ -31,13 +31,13 @@ exports.createImagesCar = async (req, res) => {
 	const fileSize = file.data.length;
 	const ext = path.extname(file.name);
 	const fileName = file.md5 + timestamp + ext;
-	const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+	const url = `${req.protocol}://${req.get("host")}/images/cars/${fileName}`;
 	const allowedType = [".png", ".jpg", ".jpeg"];
 
 	if (!allowedType.includes(ext.toLowerCase())) return res.status(422).json({ message: "Invalid image format. Make sure the uploaded format is .jpg, .jpeg, and .png" });
 	if (fileSize > 2000000) return res.status(422).json({ message: "Image must be less than 2 MB" });
 
-	file.mv(`./public/images/${fileName}`, async (err) => {
+	file.mv(`./public/images/cars/${fileName}`, async (err) => {
 		if (err) return res.status(500).json({ message: err.message });
 	});
 	try {
@@ -66,7 +66,7 @@ exports.deleteImagesCar = async (req, res) => {
 		const imageCar = await Image_Car.findByPk(id);
 
 		if (imageCar) {
-			const filepath = `./public/images/${imageCar.image}`;
+			const filepath = `./public/images/cars/${imageCar.image}`;
 			fs.unlinkSync(filepath);
 			await imageCar.destroy();
 
@@ -106,15 +106,15 @@ exports.updateImagesCar = async (req, res) => {
 			if (!allowedType.includes(ext.toLowerCase())) return res.status(422).json({ message: "Invalid image format. Make sure the uploaded format is .jpg, .jpeg, and .png" });
 			if (fileSize > 2000000) return res.status(422).json({ message: "Image must be less than 2 MB" });
 
-			const filepath = `./public/images/${imageCar.image}`;
+			const filepath = `./public/images/cars/${imageCar.image}`;
 			fs.unlinkSync(filepath);
 
-			file.mv(`./public/images/${fileName}`, (err) => {
+			file.mv(`./public/images/cars/${fileName}`, (err) => {
 				if (err) return res.status(500).json({ message: err.message });
 			});
 		}
 
-		const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+		const url = `${req.protocol}://${req.get("host")}/images/cars/${fileName}`;
 
 		await Image_Car.update(
 			{ image: fileName, url: url },

@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
 		}
 
 		// Generate JWT token
-		const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "5h" });
+		const token = jwt.sign({ userId: user.id, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "5h" });
 
 		// Check user role
 		if (user.role === "admin") {

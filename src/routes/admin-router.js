@@ -1,6 +1,5 @@
 const express = require("express");
 const { verifyToken, verifyAdmin } = require("../controllers/auth-controller");
-const { updateUserValidationRules } = require("../validators/auth-validator");
 const { createBrand, getAllBrands, getBrandById, updateBrand, deleteBrand } = require("../controllers/brand-controller");
 const { createBrandValidationRules, updateBrandValidationRules } = require("../validators/brand-validator");
 const { createPayment, getAllPayments, getPaymentById, updatePayment, deletePayment } = require("../controllers/payment-controller");
@@ -10,7 +9,6 @@ const { createCarValidationRules, updateCarValidationRules } = require("../valid
 const { getImagesCarById, createImagesCar, deleteImagesCar, updateImagesCar } = require("../controllers/imagecar-controller");
 const { getSpesificationCarById, createSpesification, deleteSpesification, updateSpesification } = require("../controllers/spesification-controller");
 const { spesificationValidationRules } = require("../validators/spesification-validator");
-const { updateProfileUser } = require("../controllers/profile-controller");
 
 const router = express.Router();
 
@@ -46,8 +44,5 @@ router.get("/spesification/:id_car", verifyToken, verifyAdmin, getSpesificationC
 router.post("/spesification/:id_car", verifyToken, verifyAdmin, spesificationValidationRules, createSpesification);
 router.delete("/spesification/:id", verifyToken, verifyAdmin, deleteSpesification);
 router.patch("/spesification/:id", verifyToken, verifyAdmin, spesificationValidationRules, updateSpesification);
-
-// Edit Profile (Testing nya di router admin)
-router.put("/profile", verifyToken, updateUserValidationRules, updateProfileUser);
 
 module.exports = router;

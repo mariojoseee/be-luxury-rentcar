@@ -1,4 +1,4 @@
-const { Transaction, Car, User } = require("../models");
+const { Transaction, Car, User, Payment, sequelize } = require("../models");
 const { validationResult } = require("express-validator");
 const moment = require("moment");
 const path = require("path");
@@ -66,6 +66,57 @@ exports.createTransaction = async (req, res) => {
 		const transaction = { start_date, end_date, car_name: car.name, customer: user.name, total_price, duration, identity_image: fileName, url: url };
 
 		return res.status(201).json({ message: "Create Transaction Success", transaction });
+	} catch (error) {
+		res.status(500).send({
+			message: "An Error Occured",
+			data: error.message,
+		});
+	}
+};
+
+// GET HISTORY TRANSACTION USER
+exports.historyTransaction = async (req, res) => {
+	try {
+		const user = req.User;
+
+		const getHistory = await Transaction.findAll({
+			where: { user_id: user.userId },
+			attributes: [
+				"id",
+				[sequelize.literal("`User`.`name`"), "customer_name"],
+				[sequelize.literal("`Car`.`name`"), "car_name"],
+				[sequelize.fn("date_format", sequelize.col("start_date"), "%Y-%m-%d"), "start_date"],
+				[sequelize.fn("date_format", sequelize.col("end_date"), "%Y-%m-%d"), "end_date"],
+				[sequelize.literal("DATEDIFF(end_date, start_date) + 1"), "duration_in_days"],
+				[sequelize.literal("CONCAT('Rp. ', FORMAT(total_price, 0))"), "total_price"],
+				[sequelize.literal("`Payment`.`name`"), "payment_name"],
+				"url",
+			],
+			raw: true,
+			include: [
+				{
+					model: Payment,
+					attributes: [],
+				},
+				{
+					model: User,
+					attributes: [],
+				},
+				{
+					model: Car,
+					attributes: [],
+				},
+			],
+		});
+
+		if (!getHistory) {
+			return res.status(404).send({
+				message: "You have never made a transaction",
+			});
+		}
+
+		// Respon get me success
+		return res.status(201).json({ message: "Get History Transaction Success", data: getHistory });
 	} catch (error) {
 		res.status(500).send({
 			message: "An Error Occured",
