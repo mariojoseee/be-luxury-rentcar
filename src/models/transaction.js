@@ -31,9 +31,17 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			url: {
+			url_identity: {
 				type: DataTypes.STRING,
 				allowNull: false,
+			},
+			payment_image: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			url_payment: {
+				type: DataTypes.STRING,
+				allowNull: true,
 			},
 			car_id: {
 				type: DataTypes.INTEGER,

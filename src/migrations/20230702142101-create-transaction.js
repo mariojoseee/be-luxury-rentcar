@@ -25,9 +25,17 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
-			url: {
+			url_identity: {
 				type: Sequelize.STRING,
 				allowNull: false,
+			},
+			payment_image: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			url_payment: {
+				type: Sequelize.STRING,
+				allowNull: true,
 			},
 			car_id: {
 				type: Sequelize.INTEGER,

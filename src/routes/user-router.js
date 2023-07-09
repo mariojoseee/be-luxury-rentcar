@@ -6,6 +6,7 @@ const { createTransactionValidationRules } = require("../validators/transaction-
 const profileController = require("../controllers/profile-controller");
 const { getAllCars, getDetailsCar } = require("../controllers/car-controller");
 const { updateProfileUser } = require("../controllers/profile-controller");
+const { updatePaymentProof } = require("../controllers/transaction-controller");
 
 const router = express.Router();
 
@@ -28,5 +29,8 @@ router.get("/my-transaction", verifyToken, historyTransaction);
 
 // CAR TRANSACTION
 router.post("/transaction/:id_car", verifyToken, createTransactionValidationRules, createTransaction);
+
+// UPLOAD BUKTI PEMBAYARAN
+router.put("/upload-payment-proof/:id", verifyToken, updatePaymentProof);
 
 module.exports = router;

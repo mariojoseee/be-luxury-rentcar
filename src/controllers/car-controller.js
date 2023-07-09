@@ -1,4 +1,4 @@
-const { Brand, Car, Image_Car, Spesification, sequelize } = require("../models");
+const { Brand, Car, Image_Car, Spesification, Transaction, sequelize } = require("../models");
 const { validationResult } = require("express-validator");
 
 // CREATE CAR
@@ -176,6 +176,40 @@ exports.getDetailsCar = async (req, res) => {
 		};
 
 		res.status(200).json({ message: "Get Car Success", formattedCar });
+	} catch (error) {
+		res.status(500).send({
+			message: "An Error Occured",
+			data: error.message,
+		});
+	}
+};
+
+// UPDATE STATUS CAR --> JIKA CUST SUDAH BAYAR (FITUR ADMIN)
+exports.updateStatusCar = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const trx = await Transaction.findByPk(id);
+		if (!trx) {
+			return res.status(404).json({ error: "Transaction not found" });
+		}
+
+		const car = await Car.findByPk(trx.car_id);
+		if (!car) {
+			return res.status(404).json({ error: "Car not found" });
+		}
+
+		if (car.status == 2) {
+			car.status = 3;
+			await car.save();
+			return res.status(200).json({ message: "Status telah diupdate ke sudah bayar", car });
+		} else if (car.status == 3) {
+			car.status = 1;
+			await car.save();
+			return res.status(200).json({ message: "Status telah diupdate ke sudah mengembalikan", car });
+		} else {
+			return res.status(404).json({ error: "Status mobil masih ready di dalam catalog!" });
+		}
 	} catch (error) {
 		res.status(500).send({
 			message: "An Error Occured",

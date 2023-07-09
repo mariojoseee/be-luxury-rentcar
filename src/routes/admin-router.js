@@ -4,10 +4,11 @@ const { createBrand, getAllBrands, getBrandById, updateBrand, deleteBrand } = re
 const { createBrandValidationRules, updateBrandValidationRules } = require("../validators/brand-validator");
 const { createPayment, getAllPayments, getPaymentById, updatePayment, deletePayment } = require("../controllers/payment-controller");
 const { createPaymentValidationRules, updatePaymentValidationRules } = require("../validators/payment-validator");
-const { createCar, getAllCars, getCarById, updateCar, deleteCar } = require("../controllers/car-controller");
+const { createCar, getAllCars, getCarById, updateCar, deleteCar, updateStatusCar } = require("../controllers/car-controller");
 const { createCarValidationRules, updateCarValidationRules } = require("../validators/car-validator");
 const { getImagesCarById, createImagesCar, deleteImagesCar, updateImagesCar } = require("../controllers/imagecar-controller");
 const { getSpesificationCarById, createSpesification, deleteSpesification, updateSpesification } = require("../controllers/spesification-controller");
+const { updatePaymentProof } = require("../controllers/transaction-controller");
 const { spesificationValidationRules } = require("../validators/spesification-validator");
 
 const router = express.Router();
@@ -44,5 +45,8 @@ router.get("/spesification/:id_car", verifyToken, verifyAdmin, getSpesificationC
 router.post("/spesification/:id_car", verifyToken, verifyAdmin, spesificationValidationRules, createSpesification);
 router.delete("/spesification/:id", verifyToken, verifyAdmin, deleteSpesification);
 router.patch("/spesification/:id", verifyToken, verifyAdmin, spesificationValidationRules, updateSpesification);
+
+// Update Status Mobil (Bukti Pembayaran valid)
+router.put("/update-status-car/:id", verifyToken, verifyAdmin, updateStatusCar);
 
 module.exports = router;
